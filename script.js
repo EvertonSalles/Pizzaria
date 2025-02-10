@@ -1,33 +1,33 @@
-let cart = []; //tudo isso nesse array, vai ser nosso carrinho
+let cart = []; 
 let modalQt = 1;
-let modalKey = 0; //quando abrir o modal, vai mostrar a pizza
+let modalKey = 0; 
 
-const c = (el)=> document.querySelector(el); // fizemos essa função para nao ter que ficar colocando toda hora document.queryselector, ai so precisa colocar "c" que ele faz a mesma coisa que o document.queryselector faria
+const c = (el)=> document.querySelector(el); 
 
-const cs = (el)=>document.querySelectorAll(el); //array mostra os itens que ele encontrou 
+const cs = (el)=>document.querySelectorAll(el); 
 
 
-//listagem das pizzas
+
 pizzaJson.map((item, index)=>{
 
-    let pizzaItem = c('.models .pizza-item').cloneNode(true) // estou clonando a div pizza-item que esta dentro da div models
+    let pizzaItem = c('.models .pizza-item').cloneNode(true) 
   
     pizzaItem.setAttribute('data-key', index);
     pizzaItem.querySelector('.pizza-item--img img').src = item.img;
-    pizzaItem.querySelector('.pizza-item--price').innerHTML = `R$ ${item.price.toFixed(2)}`; //isso é para ficar 2 numeros depois da virgula exemplo 16.99 e colocar o R$
+    pizzaItem.querySelector('.pizza-item--price').innerHTML = `R$ ${item.price.toFixed(2)}`; 
     pizzaItem.querySelector('.pizza-item--name').innerHTML = item.name;
     pizzaItem.querySelector('.pizza-item--desc').innerHTML = item.description;
     pizzaItem.querySelector('a').addEventListener('click', (e)=>{
-        e.preventDefault(); //quando alguem clicar no link, ele nao vai ficar mais atualizando a tela e sim realizar alguma ação
-        let key = e.target.closest('.pizza-item').getAttribute('data-key') //vai achar o elemento mais proximo que tenha pizza-item 
-        modalQt = 1 //reseta quantidade
-        modalKey = key;//vai falar qual a pizza
+        e.preventDefault(); 
+        let key = e.target.closest('.pizza-item').getAttribute('data-key') 
+        modalQt = 1 
+        modalKey = key;
 
        c('.pizzaBig img ').src = pizzaJson[key].img;
-       c('.pizzaInfo h1').innerHTML = pizzaJson[key].name; //esse pizzajson[key] serve para quando abrir o modal, vai aparecer o nome da pizza que eu cliquei
+       c('.pizzaInfo h1').innerHTML = pizzaJson[key].name; 
        c('.pizzaInfo--desc').innerHTML = pizzaJson[key].description;
        c('.pizzaInfo--actualPrice').innerHTML = `R$ ${pizzaJson[key].price.toFixed(2)}`;
-       c('.pizzaInfo--size.selected').classList.remove('selected'); //remover o selected da classe pizzainfosize
+       c('.pizzaInfo--size.selected').classList.remove('selected'); 
        cs('.pizzaInfo--size').forEach((size, sizeIndex)=>{
         if(sizeIndex ==2){
             size.classList.add('selected')
@@ -36,22 +36,22 @@ pizzaJson.map((item, index)=>{
 
        })
 
-       c('.pizzaInfo--qt').innerHTML = modalQt; //O VALOR DO MODAL SEMPRE VAI COMEÇAR COM 1
+       c('.pizzaInfo--qt').innerHTML = modalQt; 
 
         c('.pizzaWindowArea').style.opacity = 0;
-        c('.pizzaWindowArea').style.display = 'flex'; //isso é para quando clicar na imagem, ele vai abrir a telinha de adicionar pizza e tlz, precisa colocar o flex, pois ele no css esta como none
+        c('.pizzaWindowArea').style.display = 'flex'; 
         setTimeout(()=>{
             c('.pizzaWindowArea').style.opacity = 1;
-        }, 200)//vai esperar 1 quinto de um segundo e vai colocar a opacidade (Fazer uma transição bem de leve)
+        }, 200)
       
     })
    
 
-   c('.pizza-area').append( pizzaItem) //aqui utiliza o append, pois o innerhtml ele iria pegar uma pizza e substituir por outra, e o appende pega uma pizza e adiciona outra inves de trocar uma pela outra
+   c('.pizza-area').append( pizzaItem) 
 
 });
 
- //eventos do modal
+
  function closeModal(){
     c('.pizzaWindowArea').style.opacity = 0;
     setTimeout(()=>{
@@ -60,13 +60,13 @@ pizzaJson.map((item, index)=>{
  }
  cs('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((item)=>{
     item.addEventListener('click', closeModal)
-}); // isso é para o botao de voltar funcionar
+}); 
 
 c('.pizzaInfo--qtmenos').addEventListener('click', ()=>{
     if(modalQt > 1){
         modalQt--;
         c('.pizzaInfo--qt').innerHTML = modalQt;
-    }//isso e para exlcuir as pizzas e ficar ate 1, para ele nao diminuir ate 0 ou -1, -2...
+    }
    
 })
 c('.pizzaInfo--qtmais').addEventListener('click', ()=>{
@@ -78,12 +78,12 @@ cs('.pizzaInfo--size').forEach((size, sizeIndex)=>{
         c('.pizzaInfo--size.selected').classList.remove('selected');
         size.classList.add('selected');
     });
-   });//isso é para mudar entre o tamanho das pizzas
+   });
    c('.pizzaInfo--addButton').addEventListener('click', ()=>{
-   // nao vai ser necessario deixar isso,entao comentei so para saber como fazer console.log('pizza:'+modalKey) //Qual a pizza?
+   
     
     let size = parseInt(c('.pizzaInfo--size.selected').getAttribute('data-key'));//Qual o tamanho da pizza?
-    let identifier =  pizzaJson[modalKey].id+'@'+size; //Garante que tamanhos diferentes da mesma pizza sejam tratados como itens separados.
+    let identifier =  pizzaJson[modalKey].id+'@'+size; 
     let key = cart.findIndex(item => item.identifier === identifier);
     if(key > -1){
         cart[key].qt += modalQt;
@@ -99,8 +99,8 @@ cs('.pizzaInfo--size').forEach((size, sizeIndex)=>{
     updateCart();
     closeModal();
 
-   // nao vai ser necessario deixar isso,entao comentei so para saber como fazer console.log('Quantidade:'+modalQt)//quantas pizzas vao ser selecionadas?
-   })//carrinho de compras
+  
+   })
 
 c('.menu-openner').addEventListener('click',()=>{
     if(cart.length > 0 ){
@@ -124,7 +124,7 @@ c('.menu-openner').addEventListener('click',()=>{
         let total = 0;
 
         for(let i in cart) {
-            let pizzaData = pizzaJson.find((item) => item.id == cart[i].id); // Renomeei para pizzaData para evitar conflito
+            let pizzaData = pizzaJson.find((item) => item.id == cart[i].id); 
             subtotal += pizzaData.price * cart[i].qt;
 
             let cartItem = c('.models .cart--item').cloneNode(true);
@@ -135,13 +135,13 @@ c('.menu-openner').addEventListener('click',()=>{
                     pizzaSizeName = 'P';
                     break;
                 case 1:
-                    pizzaSizeName = 'M'; // ← Corrigido
+                    pizzaSizeName = 'M'; 
                     break;
                 case 2:
-                    pizzaSizeName = 'G'; // ← Corrigido
+                    pizzaSizeName = 'G'; 
                     break;
             }
-            let pizzaName = `${pizzaData.name} (${pizzaSizeName})`; // Usando pizzaData
+            let pizzaName = `${pizzaData.name} (${pizzaSizeName})`; 
 
             cartItem.querySelector('img').src = pizzaData.img;
             cartItem.querySelector('.cart--item-nome').innerHTML = pizzaName;
